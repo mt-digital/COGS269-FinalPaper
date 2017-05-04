@@ -1,0 +1,88 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{minted}
+\usepackage{lineno}
+\linenumbers
+\usepackage{pslatex}
+\usepackage{apacite}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[margin=1.0in]{geometry}
+
+% \doublespace
+
+\title{Effects of bias and cultural environment on cultural polarization}
+
+\author{Matthew A.~Turner}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:Introduction}
+
+\section{Methods}
+\label{sec:Methods}
+
+\subsection{Model}
+\label{sub:Model}
+
+Our model extends the cultural polarization model introduced by 
+\citeA{Flache2011}. In this model, agents are nodes of a graph with weighted
+edges connecting neighbors. Each agent, indexed by $i$, has a set of $K$ opinions 
+that change over time, $s_{i,t} = \left\{ s_{ik,t} | k = 1, \ldots, K\right\}$.
+Edge weights are updated at each iteration. The weight
+at time $t+1$ between agents $i$ and $j$ are given by 
+
+\begin{equation}
+  w_{ij,t+1} = 1 - \frac{1}{K} \sum_{k=1}^K \left| s_{jk,t} - s_{ik,t} \right|
+\end{equation}
+
+\noindent
+If agents $i$ and $j$ have exactly the same $K$ opinions, $w_{ij} = 1$. 
+
+Opinions are updated through a weighted difference of their opinions. 
+First an unscaled difference is calculated for each agent's opinions at a given time
+
+\begin{equation}
+  \Delta s_{ik,t} = \frac{1}{2 |\mathrm{n}_t(i)|} 
+    \sum_{j \in \mathrm{n}_t(i)} w_{ij,t} \left(s_{jk,t} - s_{ik,t}\right) + \epsilon(\sigma)
+\end{equation}
+
+\noindent 
+where $\epsilon(\sigma) \sim \mathcal{N}(0, \sigma)$. In the experiments,
+$\sigma$ will be varied to represent random effects due to the cultural environment
+and/or an agent's random variation of opinions.
+$\mathrm{n}_t(i)$ is the number of neighbors of agent $i$ at time $t$.
+This difference is scaled to be less the closer $|s_{ik,t}|$ is to 1. At $t+1$
+each opinion is updated,
+
+\begin{equation}
+  s_{ik,t+1} = \begin{cases}
+                  s_{ik,t} + \Delta s_{ik,t}\left(1 - s_{ik,t}\right) 
+                      \quad \mathrm{if}~ s_{ik,t} > 0 \\
+                  s_{ik,t} + \Delta s_{ik,t}\left(1 + s_{ik,t}\right)
+                      \quad \mathrm{if}~ s_{ik,t} \leq 0.
+  \end{cases}
+\end{equation}
+
+\subsection{Experimental Setup}
+\label{sub:Experimental-Setup}
+
+
+\bibliographystyle{apacite}
+
+\setlength{\bibleftmargin}{.125in}
+\setlength{\bibindent}{-\bibleftmargin}
+
+\bibliography{/Users/mt/workspace/papers/library.bib}
+
+
+\end{document}
